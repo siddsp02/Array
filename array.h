@@ -18,8 +18,6 @@ typedef struct {
 #define max(a, b) ((a > b) ? a : b)
 #define len(arr) (sizeof(arr) / sizeof(arr[0])) // For static arrays (in scope).
 
-// Type generic macros.
-
 #define arr_new(type) {                                         \
     .size = 0,                                                  \
     .elem_size = sizeof(type),                                  \
