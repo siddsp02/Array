@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
 
 typedef struct {
     size_t size;
@@ -15,25 +14,12 @@ typedef struct {
 } array;
 
 #define INITIAL_CAPACITY 8
-#define max(a, b) ((a > b) ? a : b)
-#define len(arr) (sizeof(arr) / sizeof(arr[0])) // For static arrays (in scope).
-
 #define arr_new(type) {                                         \
     .size = 0,                                                  \
     .elem_size = sizeof(type),                                  \
     .capacity = INITIAL_CAPACITY,                               \
     .data = malloc(INITIAL_CAPACITY * sizeof(type)),            \
 }
-#define arr_create(arr) ({                                      \
-    array ret = {                                               \
-        .size = len(arr),                                       \
-        .elem_size = sizeof(arr[0]),                            \
-        .capacity = max(INITIAL_CAPACITY, len(arr)),            \
-    };                                                          \
-    ret.data = malloc(ret.capacity * ret.elem_size);            \
-    memcpy(ret.data, arr, sizeof(arr));                         \
-    ret;                                                        \
-})
 #define arr_fill(val, len) ({                                   \
     array ret = {                                               \
         .size = len,                                            \
@@ -51,7 +37,7 @@ typedef struct {
 }
 #define arr_push(arr, elem) {                                   \
     if (arr.capacity == arr.size)                               \
-        arr_resize(arr, arr.capacity*2)                         \
+        arr_resize(arr, arr.capacity * 2)                       \
     ((typeof(elem) *) arr.data)[arr.size++] = elem;             \
 }
 #define arr_insert(arr, i, elem) {                              \
