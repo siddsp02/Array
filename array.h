@@ -20,33 +20,33 @@ typedef struct {
     .capacity = INITIAL_CAPACITY,                               \
     .data = malloc(INITIAL_CAPACITY * sizeof(type)),            \
 }
-#define arr_fill(val, len) ({                                   \
+#define arr_fill(type, val, len) ({                             \
     array ret = {                                               \
         .size = len,                                            \
-        .elem_size = sizeof(val),                               \
+        .elem_size = sizeof(type),                              \
         .capacity = len,                                        \
-        .data = malloc(len * sizeof(val)),                      \
+        .data = malloc(len * sizeof(type)),                     \
     };                                                          \
     for (size_t i = 0; i < len; ++i)                            \
-        ((typeof(val) *) ret.data)[i] = val;                    \
+        ((type *) ret.data)[i] = val;                           \
     ret;                                                        \
 })
 #define arr_resize(arr, new_capacity) {                         \
-    arr.capacity = new_capacity;                                \
-    arr.data = realloc(arr.data, arr.capacity * arr.elem_size); \
+    (arr)->capacity = new_capacity;                             \
+    (arr)->data = realloc((arr)->data, (arr)->capacity * (arr)->elem_size); \
 }
 #define arr_push(arr, elem) {                                   \
-    if (arr.capacity == arr.size)                               \
-        arr_resize(arr, arr.capacity * 2)                       \
-    ((typeof(elem) *) arr.data)[arr.size++] = elem;             \
+    if ((arr)->capacity == (arr)->size)                         \
+        arr_resize(arr, (arr)->capacity * 2);                   \
+    ((typeof(elem) *) (arr)->data)[(arr)->size++] = elem;       \
 }
 #define arr_insert(arr, i, elem) {                              \
-    if (arr.capacity == arr.size)                               \
-        arr_resize(arr, arr.capacity * 2);                      \
-    memmove(((typeof(elem) *) arr.data) + i + 1, (typeof(elem) *) arr.data, (arr.size++ - i) * sizeof(elem));\
-    ((typeof(elem) *) arr.data)[i] = elem;                      \
+    if ((arr)->capacity == (arr)->size)                         \
+        arr_resize(arr, (arr)->capacity * 2);                   \
+    memmove(((typeof(elem) *) (arr)->data) + i + 1, ((typeof(elem) *) (arr)->data) + i, ((arr)->size++ - i) * sizeof(elem)); \
+    ((typeof(elem) *) (arr)->data)[i] = elem;                   \
 }
-#define arr_dest(arr) free(arr.data);
-#define arr_qsort(arr, cmp) qsort(arr.data, arr.size, arr.elem_size, cmp);
-#define arr_bsearch(key, arr, cmp) bsearch(key, arr.data, arr.size, arr.elem_size, cmp);
+#define arr_dest(arr) free((arr)->data);
+#define arr_qsort(arr, cmp) qsort((arr)->data, (arr)->size, (arr)->elem_size, cmp);
+#define arr_bsearch(arr, key, cmp) bsearch(key, (arr)->data, (arr)->size, (arr)->elem_size, cmp);
 #endif /* ARRAY_H */
