@@ -40,7 +40,8 @@ typedef struct {
         arr_resize(arr, (arr)->capacity * 2);                   \
     ((typeof(elem) *) (arr)->data)[(arr)->size++] = elem;       \
 }
-#define arr_pop(arr) ({\
+// Make sure to dereference when popping (e.g. int x = *(int *) arr_pop(arr)
+#define arr_pop(arr) ({                                         \
     if ((arr)->capacity > (arr)->size * 2)                      \
         arr_resize(arr, (arr)->capacity / 2);                   \
     ((char *) (arr)->data) + --(arr)->size*(arr)->elem_size;    \
