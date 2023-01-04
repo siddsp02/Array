@@ -40,19 +40,16 @@ typedef struct {
         arr_resize(arr, (arr)->capacity * 2);                   \
     ((typeof(elem) *) (arr)->data)[(arr)->size++] = elem;       \
 }
-// Make sure to dereference when popping (e.g. int x = *(int *) arr_pop(arr))
-#define arr_pop(arr) ({                                         \
-    if ((arr)->capacity > (arr)->size * 2)                      \
-        arr_resize(arr, (arr)->capacity / 2);                   \
-    ((char *) (arr)->data) + --(arr)->size*(arr)->elem_size;    \
-})
+// Make sure to dereference when popping (e.g. int x = *(int *) arr_pop(arr)).
+#define arr_pop(arr) (((char *) (arr)->data) + --(arr)->size * (arr)->elem_size)
 #define arr_insert(arr, i, elem) {                              \
     if ((arr)->capacity == (arr)->size)                         \
         arr_resize(arr, (arr)->capacity * 2);                   \
     memmove(((typeof(elem) *) (arr)->data) + i + 1, ((typeof(elem) *) (arr)->data) + i, ((arr)->size++ - i) * sizeof(elem)); \
     ((typeof(elem) *) (arr)->data)[i] = elem;                   \
 }
+#define arr_remove_at(arr, i) memmove(((char *) (arr)->data) + i * (arr)->elem_size, ((char *) (arr)->data) + (i+1) * (arr)->elem_size, (--(arr)->size - i) * (arr)->elem_size);
 #define arr_dest(arr) free((arr)->data);
 #define arr_qsort(arr, cmp) qsort((arr)->data, (arr)->size, (arr)->elem_size, cmp);
 #define arr_bsearch(arr, key, cmp) bsearch(key, (arr)->data, (arr)->size, (arr)->elem_size, cmp);
-#endif /* ARRAY_H */
+#endif  /* ARRAY_H */
