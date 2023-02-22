@@ -14,7 +14,7 @@ typedef struct {
 } array;
 
 #define INITIAL_CAPACITY 8
-#define arr_new(type) {                                         \
+#define arr_new(type) (array) {                                 \
     .size = 0,                                                  \
     .elem_size = sizeof(type),                                  \
     .capacity = INITIAL_CAPACITY,                               \
