@@ -7,9 +7,7 @@
 #include <string.h>
 
 typedef struct {
-    size_t size;
-    size_t elem_size;
-    size_t capacity;
+    size_t size, elem_size, capacity;
     void *data;
 } array;
 
