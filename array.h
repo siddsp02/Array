@@ -11,11 +11,10 @@ typedef struct {
     void *data;
 } array;
 
-#define INITIAL_CAPACITY 8
 #define arr_new(type) (array) {                                 \
     .elem_size = sizeof(type),                                  \
-    .capacity = INITIAL_CAPACITY,                               \
-    .data = malloc(INITIAL_CAPACITY * sizeof(type)),            \
+    .capacity = 8,                                              \
+    .data = malloc(8 * sizeof(type)),                           \
 }
 #define arr_fill(type, val, len) ({                             \
     array ret = {                                               \
