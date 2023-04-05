@@ -1,5 +1,4 @@
-/* Dynamic array implementation in C. The following code is my own borrowed
-   from https://github.com/siddsp02/ArrayLib/blob/main/array.h */
+/* Flexible dynamic array implementation in C. The following code is my own. */
 
 #ifndef ARRAY_H
 #define ARRAY_H
