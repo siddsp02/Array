@@ -9,7 +9,7 @@ language for writing less code :)
 
 Here is an example of using an array for finding all prime numbers less than 10,000.
 
-```
+```C
 #include "array.h"
 #include <stdio.h>
 #include <stdbool.h>
