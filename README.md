@@ -16,8 +16,6 @@ Here is an example of using an array for finding all prime numbers less than 10,
 #include <stdint.h>
 #include <math.h>
 
-typedef array array;      // For syntax highlighting.
-
 array primes(uint64_t n) {
     uint64_t i, j;
     bool sieve[n];        // Use a VLA for the sieve.
