@@ -6,19 +6,25 @@
 #include <string.h>
 
 typedef struct {
-    size_t size, elem_size, capacity;
+    size_t size, elemsize, capacity;
     void *data;
 } array;
 
 #define arr_new(type) (array) {                                 \
-    .elem_size = sizeof(type),                                  \
+    .elemsize = sizeof(type),                                   \
     .capacity = 8,                                              \
     .data = malloc(8 * sizeof(type)),                           \
+}
+#define arr_from_ptr(ptr, len) (array) {                        \
+    .elemsize = sizeof(ptr[0]),                                 \
+    .capacity = len,                                            \
+    .data = ptr,                                                \
+    .size = len,                                                \
 }
 #define arr_fill(type, val, len) ({                             \
     array ret = {                                               \
         .size = len,                                            \
-        .elem_size = sizeof(type),                              \
+        .elemsize = sizeof(type),                               \
         .capacity = len,                                        \
         .data = malloc(len * sizeof(type)),                     \
     };                                                          \
@@ -28,8 +34,9 @@ typedef struct {
 })
 #define arr_resize(arr, new_capacity) do {                      \
     (arr)->capacity = new_capacity;                             \
-    (arr)->data = realloc((arr)->data, (arr)->capacity * (arr)->elem_size); \
+    (arr)->data = realloc((arr)->data, (arr)->capacity * (arr)->elemsize); \
 } while (0)
+#define arr_cast(type, arr) ((type *) (arr)->data)
 #define arr_push(arr, elem) do {                                \
     if ((arr)->capacity == (arr)->size)                         \
         arr_resize(arr, (arr)->capacity * 2);                   \
