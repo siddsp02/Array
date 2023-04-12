@@ -14,7 +14,7 @@ typedef struct { size_t size, capacity; } _array;
     arr_data(ptr)->capacity = 8;                           \
     (T *) ptr;                                             \
 })
-#define arr_fill(T, val, len) ({\
+#define arr_fill(T, val, len) ({                           \
     char *ptr = malloc(sizeof(_array) + len * sizeof(T));  \
     ptr += sizeof(_array);                                 \
     arr_data(ptr)->size = 0;                               \
