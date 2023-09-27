@@ -23,6 +23,7 @@ typedef struct { size_t size, capacity; } _array;
         ptr[i] = val;                                      \
     (T *) ptr;                                             \
 })
+#define each(item, arr) (typeof(arr) item = arr; item != &arr[len(arr)]; ++item)
 #define len(arr) ({ arr_data(arr)->size; })
 #define cap(arr) ({ arr_data(arr)->capacity; })
 #define arr_resize(arr, new_capacity) do {                 \

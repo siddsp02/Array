@@ -37,8 +37,8 @@ int main() {
     size_t i;
     array(int) arr = primes(10000);
     // Use like a normal array.
-    for (i = 0; i < len(arr); ++i)
-        printf("%d\n", arr[i]);
+    for each(item, arr)
+        printf("%d\n", *item);
     arr_dest(arr); // Free array from memory.
     return 0;
 }
