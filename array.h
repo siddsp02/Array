@@ -5,22 +5,16 @@
 
 typedef struct { size_t size, capacity; } _array;
 
+#define max(a, b) (((a) > (b)) ? (a) : (b))
 #define array(T) T *
 #define arr_data(arr) (((_array *) arr) - 1) 
-#define arr_new(T) ({                                      \
-    char *ptr = malloc(sizeof(_array) + 8 * sizeof(T));    \
+#define arr_new(T, ...) ({                                 \
+    T tmp[] = { __VA_ARGS__ };                             \
+    char *ptr = malloc(sizeof(_array) + max(8 * sizeof(T), sizeof(tmp))); \
     ptr += sizeof(_array);                                 \
-    arr_data(ptr)->size = 0;                               \
-    arr_data(ptr)->capacity = 8;                           \
-    (T *) ptr;                                             \
-})
-#define arr_fill(T, val, len) ({                           \
-    char *ptr = malloc(sizeof(_array) + len * sizeof(T));  \
-    ptr += sizeof(_array);                                 \
-    arr_data(ptr)->size = 0;                               \
-    arr_data(ptr)->capacity = len;                         \
-    for (size_t i = 0; i < len; ++i)                       \
-        ptr[i] = val;                                      \
+    arr_data(ptr)->size = sizeof(tmp) / sizeof(T);         \
+    arr_data(ptr)->capacity = max(8 * sizeof(T), sizeof(tmp)) / sizeof(T); \
+    memcpy(ptr, tmp, sizeof(tmp));                         \
     (T *) ptr;                                             \
 })
 #define each(item, arr) (typeof(arr) item = arr; item != &arr[len(arr)]; ++item)
