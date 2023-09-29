@@ -69,7 +69,7 @@ int main() {
        
        is equivalent to
        
-       int arr[] = {0, 1};  */
+       int arr[] = {0, 1}; */
     size_t i;
     array(int) arr = arr_new(int, 0, 1);
     for (i = 1; i < 10; ++i)
