@@ -80,8 +80,8 @@ int main() {
 }
 ```
 Since `arr_new(T, ...)` is variadic in nature, you can also initialize an empty array
-by just using `arr_new(T)`, where T is the element type of the array.
+by just using `arr_new(T)`, where `T` is the element type of the array.
 
 `arr_new(T, ...)` also allows setting ranges and indices to specified values. If you
 want to create a dynamic array of ints with 10 initial values, each of them being -1,
-you would just have to call `arr_new(int, [0 ... 0] = -1)`.
+you would just have to call `arr_new(int, [0 ... 9] = -1)`.
