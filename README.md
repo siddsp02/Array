@@ -61,7 +61,6 @@ This includes initializes indices and even ranges of indices to specified values
 /* A program that creates an array of the fibonacci numbers. */
 
 int main() {
-    size_t i;
     /* Arguments to the right of the type are the same as
        array initializer values. 
        As an example:
@@ -71,6 +70,7 @@ int main() {
        is equivalent to
        
        int arr[] = {0, 1};  */
+    size_t i;
     array(int) arr = arr_new(int, 0, 1);
     for (i = 1; i < 10; ++i)
         arr_push(arr, arr[i] + arr[i-1]);
