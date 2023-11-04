@@ -35,10 +35,23 @@ typedef struct { size_t size, capacity; } array;
         arr_resize(arr, cap(arr) * 2);                      \
     arr[i] = (memmove(arr + i + 1, arr + i, (arr_data(arr)->size++ - i) * sizeof(*arr)), elem); \
 } while (0)
+#define make_cmp(T) ({                          \
+    int __cmp__(const void *a, const void *b) { \
+        if (*(T *) a < *(T *) b) return -1;     \
+        if (*(T *) a > *(T *) b) return 1;      \
+        return 0;                               \
+    }                                           \
+    __cmp__;                                    \
+})
+#define sort(arr) qsort(arr, len(arr), sizeof(*arr), make_cmp(typeof(*arr)))
+#define binarysearch(arr, value) ({               \
+    typeof(*arr) tmp = value;                     \
+    bsearch(&tmp, arr, len(arr), sizeof(*arr), make_cmp(typeof(*arr))); \
+})
 #define arr_push(arr, elem) arr_insert(arr, (len(arr)-1), elem)
 #define arr_pop(arr) ({ arr[--arr_data(arr)->size]; })
 #define arr_remove_at(arr, i) memmove(arr+(i), arr+(i+1), (--arr_data(arr)->size - (i)) * sizeof(*arr))
 #define arr_dest(arr) free(arr_data(arr))
 #define arr_qsort(arr, cmp) qsort(arr, len(arr), sizeof(*arr), cmp)
-#define arr_bsearch(arr, key, cmp) bsearch(key, arr, len(arr), cmp)
+#define arr_bsearch(arr, key, cmp) bsearch(key, arr, len(arr), sizeof(*arr), cmp)
 #endif  /* ARRAY_H */
