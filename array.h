@@ -3,19 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct { size_t size, capacity; } _array;
+typedef struct { size_t size, capacity; } array;
 
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define array(T) T *
-#define arr_data(arr) (((_array *) arr) - 1) 
+#define arr_data(arr) (((array *) arr) - 1) 
 #define arr_new(T, ...) ({                                 \
     T tmp[] = { __VA_ARGS__ };                             \
-    _array *ptr = malloc(sizeof(_array) + max(8*sizeof(T), sizeof(tmp))); \
-    *ptr = (_array) { sizeof(tmp) / sizeof(T), max(8*sizeof(T), sizeof(tmp)) / sizeof(T) }; \
+    array *ptr = malloc(sizeof(array) + max(8*sizeof(T), sizeof(tmp))); \
+    *ptr = (array) { sizeof(tmp) / sizeof(T), max(8*sizeof(T), sizeof(tmp)) / sizeof(T) }; \
     (T *) memcpy(++ptr, tmp, sizeof(tmp));                 \
 })
 #define arr_fill(T, val, len) ({                           \
-    _array *ptr = malloc(sizeof(_array) + len * sizeof(T));\
+    array *ptr = malloc(sizeof(array) + len * sizeof(T));\
     ptr->size = ptr->capacity = len;                       \
     for (size_t i = 0; i < len; ++i)                       \
         ((T *) (ptr + 1))[i] = val;                        \
@@ -27,13 +27,13 @@ typedef struct { size_t size, capacity; } _array;
 #define cap(arr) ({ arr_data(arr)->capacity; })
 #define arr_resize(arr, new_capacity) do {                 \
     arr_data(arr)->capacity = new_capacity;                \
-    _array *tmp = realloc(arr_data(arr), sizeof(_array) + cap(arr) * sizeof(*arr)); \
+    array *tmp = realloc(arr_data(arr), sizeof(array) + cap(arr)*sizeof(*arr)); \
     arr = (typeof(arr)) (++tmp);                           \
 } while (0)
-#define arr_insert(arr, i, elem) do {                      \
-    len(arr) == cap(arr) ? arr_resize(arr, cap(arr)*2) : 0;\
-    memmove(arr+(i)+1, arr+(i), (arr_data(arr)->size++ - (i)) * sizeof(*arr)); \
-    arr[i] = elem;                                         \
+#define arr_insert(arr, i, elem) do {                       \
+    if (len(arr) == cap(arr))                               \
+        arr_resize(arr, cap(arr) * 2);                      \
+    arr[i] = (memmove(arr + i + 1, arr + i, (arr_data(arr)->size++ - i) * sizeof(*arr)), elem); \
 } while (0)
 #define arr_push(arr, elem) arr_insert(arr, (len(arr)-1), elem)
 #define arr_pop(arr) ({ arr[--arr_data(arr)->size]; })
