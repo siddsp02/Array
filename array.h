@@ -15,7 +15,7 @@ typedef struct { size_t size, capacity; } array;
     (T *) memcpy(++ptr, tmp, sizeof(tmp));                 \
 })
 #define arr_fill(T, val, len) ({                           \
-    array *ptr = malloc(sizeof(array) + len * sizeof(T));\
+    array *ptr = malloc(sizeof(array) + len * sizeof(T));  \
     ptr->size = ptr->capacity = len;                       \
     for (size_t i = 0; i < len; ++i)                       \
         ((T *) (ptr + 1))[i] = val;                        \
