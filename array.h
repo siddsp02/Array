@@ -2,6 +2,7 @@
 #define ARRAY_H
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 typedef struct { size_t size, capacity; } array;
 
@@ -30,22 +31,20 @@ typedef struct { size_t size, capacity; } array;
     array *tmp = realloc(arr_data(arr), sizeof(array) + cap(arr)*sizeof(*arr)); \
     arr = (typeof(arr)) (++tmp);                           \
 } while (0)
-#define arr_insert(arr, i, elem) do {                       \
-    if (len(arr) == cap(arr))                               \
-        arr_resize(arr, cap(arr) * 2);                      \
+#define arr_insert(arr, i, elem) do {                      \
+    if (len(arr) == cap(arr))                              \
+        arr_resize(arr, cap(arr) * 2);                     \
     arr[i] = (memmove(arr + i + 1, arr + i, (arr_data(arr)->size++ - i) * sizeof(*arr)), elem); \
 } while (0)
 #define make_cmp(T) ({                          \
     int __cmp__(const void *a, const void *b) { \
-        if (*(T *) a < *(T *) b) return -1;     \
-        if (*(T *) a > *(T *) b) return 1;      \
-        return 0;                               \
+        return (*(T *) a - *(T *) b < 0) ? floor(*(T *) a - *(T *) b) : ceil(*(T *) a - *(T *) b); \
     }                                           \
     __cmp__;                                    \
 })
 #define sort(arr) qsort(arr, len(arr), sizeof(*arr), make_cmp(typeof(*arr)))
-#define binarysearch(arr, value) ({               \
-    typeof(*arr) tmp = value;                     \
+#define binarysearch(arr, value) ({             \
+    typeof(*arr) tmp = value;                   \
     bsearch(&tmp, arr, len(arr), sizeof(*arr), make_cmp(typeof(*arr))); \
 })
 #define arr_push(arr, elem) arr_insert(arr, (len(arr)-1), elem)
