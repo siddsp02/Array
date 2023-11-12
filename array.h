@@ -22,6 +22,7 @@ typedef struct { size_t size, capacity; } array;
         ((T *) (ptr + 1))[i] = val;                        \
     (T *) ++ptr;                                           \
 })
+#define arr_from_str(str) strcpy(arr_fill(char, '\0', strlen(str) + 1), str)
 #define each(item, arr) (typeof(arr) item = arr; item != &arr[len(arr)]; ++item)
 #define reversed(item, arr)  (typeof(arr) item = &arr[len(arr)-1]; item != arr - 1; --item)
 #define len(arr) ({ arr_data(arr)->size; })
