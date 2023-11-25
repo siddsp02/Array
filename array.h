@@ -27,14 +27,15 @@ typedef struct { size_t size, capacity; } array;
 #define reversed(item, arr)  (typeof(arr) item = &arr[len(arr)-1]; item != arr - 1; --item)
 #define len(arr) ({ arr_data(arr)->size; })
 #define cap(arr) ({ arr_data(arr)->capacity; })
-#define arr_resize(arr, new_capacity) do {                 \
-    arr_data(arr)->capacity = new_capacity;                \
+#define arr_realloc(arr, new_capacity) ({                   \
+    arr_data(arr)->capacity = new_capacity;                 \
     array *tmp = realloc(arr_data(arr), sizeof(array) + cap(arr)*sizeof(*arr)); \
-    arr = (typeof(arr)) (++tmp);                           \
-} while (0)
+    arr = (typeof(arr)) (++tmp);                            \
+})
+#define arr_resize(arr, new_capacity) (arr_realloc(arr, new_capacity), arr_data(arr)->size = cap(arr))
 #define arr_insert(arr, i, elem) do {                      \
     if (len(arr) == cap(arr))                              \
-        arr_resize(arr, cap(arr) * 2);                     \
+        arr_realloc(arr, cap(arr) * 2);                    \
     arr[i] = (memmove(arr + i + 1, arr + i, (arr_data(arr)->size++ - i) * sizeof(*arr)), elem); \
 } while (0)
 #define make_cmp(T) ({                          \
@@ -51,7 +52,7 @@ typedef struct { size_t size, capacity; } array;
 #define arr_push(arr, elem) arr_insert(arr, (len(arr)-1), elem)
 #define arr_pop(arr) ({ arr[--arr_data(arr)->size]; })
 #define arr_remove_at(arr, i) memmove(arr+(i), arr+(i+1), (--arr_data(arr)->size - (i)) * sizeof(*arr))
-#define arr_dest(arr) free(arr_data(arr))
+#define arr_free(arr) free(arr_data(arr))
 #define arr_qsort(arr, cmp) qsort(arr, len(arr), sizeof(*arr), cmp)
 #define arr_bsearch(arr, key, cmp) bsearch(key, arr, len(arr), sizeof(*arr), cmp)
 #endif  /* ARRAY_H */
