@@ -6,21 +6,20 @@
 
 typedef struct { size_t size, capacity; } array;
 
-#define max(a, b) (((a) > (b)) ? (a) : (b))
 #define array(T) T *
 #define arr_data(arr) (((array *) arr) - 1) 
 #define arr_new(T, ...) ({                                 \
     T tmp[] = { __VA_ARGS__ };                             \
-    array *ptr = malloc(sizeof(array) + max(8*sizeof(T), sizeof(tmp))); \
-    *ptr = (array) { sizeof(tmp) / sizeof(T), max(8*sizeof(T), sizeof(tmp)) / sizeof(T) }; \
-    (T *) memcpy(++ptr, tmp, sizeof(tmp));                 \
+    array *ptr = malloc(sizeof(array) + sizeof(tmp));      \
+    *ptr = (array) { 0, sizeof(tmp) / sizeof(T) };         \
+    (T *) memcpy(ptr + 1, tmp, sizeof(tmp));               \
 })
 #define arr_fill(T, val, len) ({                           \
-    array *ptr = malloc(sizeof(array) + len * sizeof(T));  \
-    ptr->size = ptr->capacity = len;                       \
-    for (size_t i = 0; i < len; ++i)                       \
-        ((T *) (ptr + 1))[i] = val;                        \
-    (T *) ++ptr;                                           \
+    T *arr = (T *) (((char *) malloc(sizeof(array) + len * sizeof(T))) + sizeof(array));  \
+    arr_resize(arr, len);                                  \
+    for each(item, arr)                                    \
+        *item = val;                                       \
+    arr;                                                   \
 })
 #define arr_from_str(str) strcpy(arr_fill(char, '\0', strlen(str) + 1), str)
 #define each(item, arr) (typeof(arr) item = arr; item != &arr[len(arr)]; ++item)
