@@ -18,10 +18,9 @@ Here is an example of using an array for finding all prime numbers less than 10,
 
 array(int) primes(int n) {
     int i, j;
-    bool sieve[n];        // Use a VLA for the sieve.
     array(int) ret;
-    memset(sieve, 1, n);  // Set all values to 'true'.
-    memset(sieve, 0, 2);  // 0 and 1 are not prime.
+    array(bool) sieve = arr_fill(bool, 1, n); // Set all values to 'true'.
+    memset(sieve, 0, 2);                      // 0 and 1 are not prime.
     for (i = 2; i < sqrt(n); ++i)
         if (sieve[i])
             for (j = i * i; j < n; j += i)
